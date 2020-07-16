@@ -1,0 +1,19 @@
+ul[class] {
+	padding: 0;
+	list-style-type: none;
+}
+
+.task {
+	display: block;
+	padding: 1rem;
+	margin: 0.45rem;
+	background: rgba(255, 255, 255, 0.5);
+	border-radius: 1rem;
+	cursor: pointer;
+	/* color: white; */
+}
+
+
+.task:hover{
+    background: #ff86e5;
+}
