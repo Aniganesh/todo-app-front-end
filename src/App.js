@@ -1,28 +1,24 @@
 import React, { useState } from 'react';
 // import logo from './logo.svg';
 import './App.css';
-
+import { Checkbox, Input, FormControlLabel, Button } from '@material-ui/core';
+import { DeleteOutlined } from '@material-ui/icons';
 
 
 function App() {
-  function createTodoAtIndex(event, index) {
+  const [todos, setTodos] = useState([{}]);
+  // Setting up hooks
+  function createTodoAtIndex(index) {
     const newTodos = [...todos];
     newTodos.splice(index + 1, 0, {
       content: '',
-      isCompleted: false
-    })
+      isCompleted: false,
+      toDisplay: true
+    });
     setTodos(newTodos);
     setTimeout(() => {
-      document.forms[0].elements[index + 1].focus();
-    }, 0);
-  }
-
-  function updateTodoAtIndex(event, index) {
-    const newTodos = [...todos];
-    newTodos[index].content = event.target.value;
-    setTodos(newTodos);
-    setTimeout(() => {
-      document.forms[0].elements[index].focus();
+      document.forms[0].elements[2 * index + 3].focus();
+      // 2 * index + 3 since there are two elements to each todo. A checkbox and a text-input
     }, 0);
   }
 
@@ -32,17 +28,18 @@ function App() {
     }
     setTodos(todos => todos.slice(0, index).concat(todos.slice(index + 1, todos.length)));
     setTimeout(() => {
-      if(index === 0){
+      if (index === 0) {
         document.forms[0].elements[index].focus();
         return;
       }
-      document.forms[0].elements[index - 1].focus();
+      document.forms[0].elements[2 * index - 1].focus();
     }, 0);
   }
 
   function handleKeyDown(event, index) {
     if (event.key === 'Enter') {
-      createTodoAtIndex(event, index);
+      event.preventDefault();
+      createTodoAtIndex(index);
     }
 
     if (event.key === 'Backspace' && event.target.value === '') {
@@ -51,13 +48,24 @@ function App() {
     }
   }
 
+  function updateTodoAtIndex(event, index) {
+    const newTodos = [...todos];
+    event.persist();
+    newTodos[index].content = event.target.value;
+    setTodos(newTodos);
+  }
+
   function toggleTodoAtIndex(index) {
     const temporaryTodos = [...todos];
     temporaryTodos[index].isCompleted = !temporaryTodos[index].isCompleted;
     setTodos(temporaryTodos);
   }
 
-  const [todos, setTodos] = useState([{}]);
+  function clearAllTodos() {
+    if (todos.length > 0 || todos[0].content !== '')
+      setTodos([{}]);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -66,18 +74,27 @@ function App() {
       <div className="container">
         <form className="todo-list">
           <ul>
-            {[...todos].map((todo, i) => (
-              <div key={Date.now() + i} className={`todo ${todo.isCompleted && 'todo-is-complete'}`}>
-                <div className="checkbox" onClick={()=>toggleTodoAtIndex(i)}>{todo.isCompleted && (
-                  <span>&#x2714;</span>
-                )}</div>
-                <input type="text" onChange={e => updateTodoAtIndex(e, i)} value={todo.content} onKeyDown={e => handleKeyDown(e, i)} />
-              </div>
-            ))}
+
+            {
+              [...todos].map((todo, i) => {
+                return (
+                  <FormControlLabel key={i}
+                    label={<Input type="text" className={`${todo.isCompleted && 'todo-is-complete'}`} value={todo.content || ''}
+                      onChange={(event) => updateTodoAtIndex(event, i)}
+                      placeholder="Add task here" onKeyDown={e => handleKeyDown(e, i)} />}
+                    control={<Checkbox onClick={() => toggleTodoAtIndex(i)} checked={todo.isCompleted || false} />} labelPlacement="end" />
+                );
+              })
+            }
           </ul>
+          <Button style={{ marginLeft: 'auto', marginRight: '80px' }}>
+            <DeleteOutlined onClick={() => clearAllTodos()} />
+          </Button>
         </form>
+
       </div>
     </div>
+
   );
 }
 

@@ -30,12 +30,16 @@
 body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   background-color: #66ccff;
+  padding: 0;
+  margin: 0;
 }
 
-#container {
+.container {
   display: flex;
-  margin: 2.5rem;
+  margin-top: 2.5rem;
   justify-content: center;
+  align-items: center;
+  min-width: 100vw;
 }
 
 .checkbox {
@@ -55,8 +59,7 @@ body {
 .todo-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  max-width: 500px;
 }
 
 .todo {
@@ -66,10 +69,6 @@ body {
   margin: 1rem 0;
 }
 
-.todo-is-completed .checkbox{
-  color: white;
-  background: black;
-}
 .todo-is-complete input {
   text-decoration: line-through;
 }
@@ -92,10 +91,5 @@ ul {
 }
 
 .todo-list input {
-  border: none;
-  background: transparent;
   font-size: 1.4rem;
-  outline: none;
-  width: 100%;
-  margin-left: 10px;
 }
